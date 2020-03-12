@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Space Time Cubes</string>
+
+    <string name="title_activity_two_d_select">TwoDSelect</string>
+    <string name="select_button">Select</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="matrix_alt">Adjacency Matrix</string>
 </resources>
