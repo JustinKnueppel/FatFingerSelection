@@ -2,6 +2,7 @@ package com.example.spacetimecubes;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +26,14 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Hello World!", Toast.LENGTH_SHORT)
                         .show();
             }
+        });
+
+        /* Start 2D Activity */
+        Button start2D = (Button) findViewById(R.id.start_2d);
+
+        start2D.setOnClickListener((v) -> {
+            Intent intent = new Intent(this, TwoDSelectActivity.class);
+            startActivity(intent);
         });
     }
 

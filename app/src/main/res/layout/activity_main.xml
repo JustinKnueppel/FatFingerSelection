@@ -16,4 +16,12 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="82dp" />
+
+    <Button
+        android:id="@+id/start_2d"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start 2D"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="248dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
