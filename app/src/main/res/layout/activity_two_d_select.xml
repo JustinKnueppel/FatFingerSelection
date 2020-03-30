@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0099cc"
+    android:orientation="vertical"
     tools:context=".TwoDSelectActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
@@ -12,53 +14,44 @@
          TextureView, etc. -->
     <ImageView
         android:id="@+id/adjacency_matrix"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_weight="@android:integer/config_shortAnimTime"
+        android:layout_width="410dp"
+        android:layout_height="403dp"
 
+        android:contentDescription="@string/matrix_alt"
         android:gravity="center"
         android:keepScreenOn="true"
         android:src="@drawable/adjacencymatrix"
-        android:contentDescription="@string/matrix_alt"/>
+        app:layout_constraintBottom_toTopOf="@+id/track_pad"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-<!--        android:text="@string/dummy_content"-->
-<!--        android:textColor="#33b5e5"-->
-<!--        android:textSize="50sp"-->
-<!--        android:textStyle="bold" />-->
+    <!--        android:text="@string/dummy_content"-->
+    <!--        android:textColor="#33b5e5"-->
+    <!--        android:textSize="50sp"-->
+    <!--        android:textStyle="bold" />-->
 
 
     <View
         android:id="@+id/track_pad"
-        android:layout_width="wrap_content"
-        android:layout_height="282dp" />
+        android:layout_width="415dp"
+        android:layout_height="260dp"
+        app:layout_constraintTop_toBottomOf="@id/adjacency_matrix"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/two_d_submit"
+        tools:layout_editor_absoluteY="404dp" />
 
     <Button
         android:id="@+id/two_d_submit"
         style="?metaButtonBarButtonStyle"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/select_button" />
-    <!-- This FrameLayout insets its children based on system windows using
-     android:fitsSystemWindows. -->
-    <!--    <FrameLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:fitsSystemWindows="true">-->
-
-<!--        <LinearLayout-->
-<!--            android:id="@+id/fullscreen_content_controls"-->
-<!--            style="?metaButtonBarStyle"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="bottom|center_horizontal"-->
-<!--            android:background="@color/black_overlay"-->
-<!--            android:orientation="horizontal"-->
-<!--            tools:ignore="UselessParent">-->
+        android:text="@string/select_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/track_pad" />
 
 
-
-<!--        </LinearLayout>-->
-<!--    </FrameLayout>-->
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
