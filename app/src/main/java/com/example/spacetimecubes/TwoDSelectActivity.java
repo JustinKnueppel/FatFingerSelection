@@ -7,14 +7,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class TwoDSelectActivity extends AppCompatActivity {
+public class TwoDSelectActivity extends AppCompatActivity implements View.OnTouchListener {
+    private ImageView _cursor;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -92,6 +95,11 @@ public class TwoDSelectActivity extends AppCompatActivity {
         mVisible = true;
         mContentView = findViewById(R.id.adjacency_matrix);
 
+        _cursor = findViewById(R.id.mousePointer);
+
+        View trackPad = findViewById(R.id.track_pad);
+        trackPad.setOnTouchListener(this);
+
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
@@ -157,5 +165,34 @@ public class TwoDSelectActivity extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    float dX, dY;
+    @Override
+    public boolean onTouch(View view, MotionEvent event) {
+        switch (event.getAction()) {
+
+            case MotionEvent.ACTION_DOWN:
+
+                dX = view.getX() - event.getRawX();
+                dY = view.getY() - event.getRawY();
+
+                Log.i("DEBUG", "dY: " + dX);
+                Log.i("DEBUG", "dY: " + dY);
+
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+
+                _cursor.animate()
+                        .x(_cursor.getX() + (float).2)
+                        .y(_cursor.getY() + (float).2)
+                        .setDuration(0)
+                        .start();
+                break;
+            default:
+                return false;
+        }
+        return true;
     }
 }
