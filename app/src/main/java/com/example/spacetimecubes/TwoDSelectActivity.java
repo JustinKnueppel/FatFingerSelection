@@ -18,6 +18,7 @@ import android.widget.ImageView;
  */
 public class TwoDSelectActivity extends AppCompatActivity implements View.OnTouchListener {
     private ImageView _cursor;
+    private ImageView _matrixView;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -96,6 +97,7 @@ public class TwoDSelectActivity extends AppCompatActivity implements View.OnTouc
         mContentView = findViewById(R.id.adjacency_matrix);
 
         _cursor = findViewById(R.id.mousePointer);
+        _matrixView = findViewById(R.id.adjacency_matrix);
 
         View trackPad = findViewById(R.id.track_pad);
         trackPad.setOnTouchListener(this);
@@ -185,11 +187,24 @@ public class TwoDSelectActivity extends AppCompatActivity implements View.OnTouc
                 oldMouseX = event.getRawX();
                 oldMouseY = event.getRawY();
 
-                _cursor.animate()
-                        .x(_cursor.getX() + dX)
-                        .y(_cursor.getY() + dY)
-                        .setDuration(0)
-                        .start();
+                /* Make sure cursor within constraints */
+                float cursorHeight = _cursor.getHeight();
+                /* Don't let the cursor get too high */
+                float topConstraint = _matrixView.getTop() + (float)0.8 * cursorHeight;
+                float bottomConstraint = _matrixView.getBottom();
+                float leftConstraint = _matrixView.getLeft();
+                float  rightConstraint = _matrixView.getRight();
+
+                float newCursorX = _cursor.getX() + dX;
+                float newCursorY = _cursor.getY() + dY;
+                if (newCursorX >= leftConstraint && newCursorX <= rightConstraint &&
+                        newCursorY >= topConstraint && newCursorY <= bottomConstraint) {
+                    _cursor.animate()
+                            .x(newCursorX)
+                            .y(newCursorY)
+                            .setDuration(0)
+                            .start();
+                }
                 break;
             default:
                 return false;
