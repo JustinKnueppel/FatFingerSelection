@@ -167,26 +167,27 @@ public class TwoDSelectActivity extends AppCompatActivity implements View.OnTouc
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
-    float dX, dY;
+    float oldMouseX, oldMouseY, dX, dY;
     @Override
     public boolean onTouch(View view, MotionEvent event) {
         switch (event.getAction()) {
 
             case MotionEvent.ACTION_DOWN:
 
-                dX = view.getX() - event.getRawX();
-                dY = view.getY() - event.getRawY();
-
-                Log.i("DEBUG", "dY: " + dX);
-                Log.i("DEBUG", "dY: " + dY);
+                oldMouseX = event.getRawX();
+                oldMouseY = event.getRawY();
 
                 break;
 
             case MotionEvent.ACTION_MOVE:
+                dX = event.getRawX() - oldMouseX;
+                dY = event.getRawY() - oldMouseY;
+                oldMouseX = event.getRawX();
+                oldMouseY = event.getRawY();
 
                 _cursor.animate()
-                        .x(_cursor.getX() + (float).2)
-                        .y(_cursor.getY() + (float).2)
+                        .x(_cursor.getX() + dX)
+                        .y(_cursor.getY() + dY)
                         .setDuration(0)
                         .start();
                 break;
