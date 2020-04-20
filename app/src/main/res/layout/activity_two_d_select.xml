@@ -21,23 +21,23 @@
 
     <ImageView
         android:id="@+id/adjacency_matrix"
-        android:layout_width="410dp"
-        android:layout_height="403dp"
+        android:layout_width="428dp"
+        android:layout_height="378dp"
 
+        android:layout_marginTop="8dp"
         android:contentDescription="@string/matrix_alt"
         android:gravity="center"
         android:keepScreenOn="true"
         android:src="@drawable/adjacencymatrix"
         app:layout_constraintBottom_toTopOf="@+id/track_pad"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/track_pad"
-        android:layout_width="415dp"
-        android:layout_height="260dp"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
         android:background="@drawable/my_border"
 
         app:layout_constraintBottom_toTopOf="@id/two_d_submit"
@@ -48,8 +48,8 @@
     <Button
         android:id="@+id/two_d_submit"
         style="?metaButtonBarButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="428dp"
+        android:layout_height="89dp"
         android:text="@string/select_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

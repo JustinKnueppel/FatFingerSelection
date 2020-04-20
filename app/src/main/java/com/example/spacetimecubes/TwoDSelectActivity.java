@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 /**
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 public class TwoDSelectActivity extends AppCompatActivity {
     private ImageView _cursor;
     private ImageView _matrixView;
+    private Button _submitButton;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -98,6 +100,9 @@ public class TwoDSelectActivity extends AppCompatActivity {
 
         _cursor = findViewById(R.id.mousePointer);
         _matrixView = findViewById(R.id.adjacency_matrix);
+        _submitButton = findViewById(R.id.two_d_submit);
+
+        _submitButton.setOnClickListener(submitButtonHandler);
 
         View trackPad = findViewById(R.id.track_pad);
         trackPad.setOnTouchListener(trackPadTouchListener);
@@ -168,6 +173,13 @@ public class TwoDSelectActivity extends AppCompatActivity {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
+
+    private final View.OnClickListener submitButtonHandler = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Log.d("Cursor Position", "X: " + _cursor.getX() + " Y " + _cursor.getY());
+        }
+    };
 
     float oldMouseX, oldMouseY, dX, dY;
     private final View.OnTouchListener trackPadTouchListener = new View.OnTouchListener() {
