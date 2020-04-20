@@ -16,7 +16,7 @@ import android.widget.ImageView;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class TwoDSelectActivity extends AppCompatActivity implements View.OnTouchListener {
+public class TwoDSelectActivity extends AppCompatActivity {
     private ImageView _cursor;
     private ImageView _matrixView;
     /**
@@ -100,7 +100,7 @@ public class TwoDSelectActivity extends AppCompatActivity implements View.OnTouc
         _matrixView = findViewById(R.id.adjacency_matrix);
 
         View trackPad = findViewById(R.id.track_pad);
-        trackPad.setOnTouchListener(this);
+        trackPad.setOnTouchListener(trackPadTouchListener);
 
 
         // Set up the user interaction to manually show or hide the system UI.
@@ -170,45 +170,47 @@ public class TwoDSelectActivity extends AppCompatActivity implements View.OnTouc
     }
 
     float oldMouseX, oldMouseY, dX, dY;
-    @Override
-    public boolean onTouch(View view, MotionEvent event) {
-        switch (event.getAction()) {
+    private final View.OnTouchListener trackPadTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
 
-            case MotionEvent.ACTION_DOWN:
+                case MotionEvent.ACTION_DOWN:
 
-                oldMouseX = event.getRawX();
-                oldMouseY = event.getRawY();
+                    oldMouseX = event.getRawX();
+                    oldMouseY = event.getRawY();
 
-                break;
+                    break;
 
-            case MotionEvent.ACTION_MOVE:
-                dX = event.getRawX() - oldMouseX;
-                dY = event.getRawY() - oldMouseY;
-                oldMouseX = event.getRawX();
-                oldMouseY = event.getRawY();
+                case MotionEvent.ACTION_MOVE:
+                    dX = event.getRawX() - oldMouseX;
+                    dY = event.getRawY() - oldMouseY;
+                    oldMouseX = event.getRawX();
+                    oldMouseY = event.getRawY();
 
-                /* Make sure cursor within constraints */
-                float cursorHeight = _cursor.getHeight();
-                /* Don't let the cursor get too high */
-                float topConstraint = _matrixView.getTop() + (float)0.8 * cursorHeight;
-                float bottomConstraint = _matrixView.getBottom();
-                float leftConstraint = _matrixView.getLeft();
-                float  rightConstraint = _matrixView.getRight();
+                    /* Make sure cursor within constraints */
+                    float cursorHeight = _cursor.getHeight();
+                    /* Don't let the cursor get too high */
+                    float topConstraint = _matrixView.getTop() + (float)0.8 * cursorHeight;
+                    float bottomConstraint = _matrixView.getBottom();
+                    float leftConstraint = _matrixView.getLeft();
+                    float  rightConstraint = _matrixView.getRight();
 
-                float newCursorX = _cursor.getX() + dX;
-                float newCursorY = _cursor.getY() + dY;
-                if (newCursorX >= leftConstraint && newCursorX <= rightConstraint &&
-                        newCursorY >= topConstraint && newCursorY <= bottomConstraint) {
-                    _cursor.animate()
-                            .x(newCursorX)
-                            .y(newCursorY)
-                            .setDuration(0)
-                            .start();
-                }
-                break;
-            default:
-                return false;
+                    float newCursorX = _cursor.getX() + dX;
+                    float newCursorY = _cursor.getY() + dY;
+                    if (newCursorX >= leftConstraint && newCursorX <= rightConstraint &&
+                            newCursorY >= topConstraint && newCursorY <= bottomConstraint) {
+                        _cursor.animate()
+                                .x(newCursorX)
+                                .y(newCursorY)
+                                .setDuration(0)
+                                .start();
+                    }
+                    break;
+                default:
+                    return false;
+            }
+            return true;
         }
-        return true;
-    }
+    };
 }
