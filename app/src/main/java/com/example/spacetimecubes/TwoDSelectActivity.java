@@ -221,8 +221,11 @@ public class TwoDSelectActivity extends AppCompatActivity {
 
                     float newCursorX = _cursor.getX() + dX;
                     float newCursorY = _cursor.getY() + dY;
-                    if (newCursorX >= leftConstraint && newCursorX <= rightConstraint &&
-                            newCursorY >= topConstraint && newCursorY <= bottomConstraint) {
+
+                    boolean movementAllowed = newCursorX >= leftConstraint && newCursorX <= rightConstraint &&
+                            newCursorY >= topConstraint && newCursorY <= bottomConstraint;
+
+                    if (true || movementAllowed) {
                         _cursor.animate()
                                 .x(newCursorX)
                                 .y(newCursorY)

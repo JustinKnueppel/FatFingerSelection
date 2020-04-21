@@ -41,12 +41,14 @@
 
     <ImageView
         android:id="@+id/mousePointer"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:adjustViewBounds="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="30dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="113dp"
         android:layout_marginStart="100dp"
-        android:layout_marginBottom="376dp"
+        android:layout_marginEnd="113dp"
+        android:layout_marginBottom="435dp"
         android:contentDescription="@string/mouse_alt"
         app:srcCompat="@drawable/mouse_pointer" />
 
