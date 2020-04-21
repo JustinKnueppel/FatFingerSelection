@@ -235,6 +235,8 @@ public class TwoDSelectActivity extends AppCompatActivity {
             Data.processPixelDistance(pixelDistanceFromCircle);
             Data.processCircleDistance(normalizedDistanceFromCircle);
 
+            finish();
+
         }
     };
 
