@@ -11,10 +11,9 @@
 
     <ImageView
         android:id="@+id/adjacency_matrix"
-        android:layout_width="match_parent"
-        android:layout_height="380dp"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
 
-        android:layout_marginTop="0dp"
         android:contentDescription="@string/matrix_alt"
         android:gravity="center"
         android:keepScreenOn="true"
@@ -27,7 +26,8 @@
         android:layout_alignParentStart="true"
 
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginBottom="76dp"
         android:background="@drawable/my_border" />
 
     <Button
