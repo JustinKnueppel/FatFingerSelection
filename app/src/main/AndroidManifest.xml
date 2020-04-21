@@ -15,9 +15,9 @@
             android:label="@string/title_activity_touch_select"
             android:theme="@style/FullscreenTheme"></activity>
         <activity
-            android:name=".TwoDSelectActivity"
+            android:name=".CursorSelectActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_two_d_select"
+            android:label="@string/title_activity_cursor_select"
             android:theme="@style/FullscreenTheme" />
         <activity android:name=".MainActivity">
             <intent-filter>

@@ -17,13 +17,12 @@ import android.widget.ImageView;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class TwoDSelectActivity extends AppCompatActivity {
+public class CursorSelectActivity extends AppCompatActivity {
     private ImageView _cursor;
     private ImageView _matrixView;
     private Button _submitButton;
@@ -119,7 +118,7 @@ public class TwoDSelectActivity extends AppCompatActivity {
         }
         imageCounter = 0;
 
-        setContentView(R.layout.activity_two_d_select);
+        setContentView(R.layout.activity_cursor_select);
 
         mVisible = true;
         mContentView = findViewById(R.id.dot_matrix);
