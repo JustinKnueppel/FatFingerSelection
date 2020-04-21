@@ -8,12 +8,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +28,8 @@ public class TouchSelectActivity extends AppCompatActivity {
     private String[] images;
     private int imageCounter;
     private Coordinates<Integer> dotPosition;
+    private long startTime;
+    private long endTime;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -98,8 +103,8 @@ public class TouchSelectActivity extends AppCompatActivity {
 
         String firstImage = images[0];
         dotPosition = getCoordinatesFromFilename(firstImage);
-        int id = getResources().getIdentifier(firstImage, "drawable", getPackageName());
-        _dotMatrix.setImageResource(id);
+        loadImage(firstImage);
+        startTime = System.nanoTime();
 
         _dotMatrix.setOnTouchListener(dotMatrixOnTouchListener);
 
@@ -175,7 +180,7 @@ public class TouchSelectActivity extends AppCompatActivity {
         return Math.sqrt(Math.pow(xdiff, 2) + Math.pow(ydiff, 2));
     }
 
-    private void loadNextImage(String nextImage) {
+    private void loadImage(String nextImage) {
         int id = getResources().getIdentifier(nextImage, "drawable", getPackageName());
         _dotMatrix.setImageResource(id);
     }
@@ -184,6 +189,8 @@ public class TouchSelectActivity extends AppCompatActivity {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                endTime = System.nanoTime();
+                Log.d("Time taken", Long.toString((endTime - startTime)/1000000) + " milliseconds");
                 float touchX = event.getX();
                 float touchY = event.getY();
 
@@ -206,7 +213,8 @@ public class TouchSelectActivity extends AppCompatActivity {
                 }
                 String nextImage = images[imageCounter];
                 dotPosition = getCoordinatesFromFilename(nextImage);
-                loadNextImage(nextImage);
+                loadImage(nextImage);
+                startTime = System.nanoTime();
 
                 return true;
             }
