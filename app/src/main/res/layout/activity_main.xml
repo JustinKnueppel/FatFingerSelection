@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/HelloWorld"
@@ -8,7 +8,7 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/start_2d"
+        android:id="@+id/start_cursor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/start_cursor_button"
@@ -19,8 +19,9 @@
         android:id="@+id/start_touch_select"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
         android:text="@string/touch_select_start_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="453dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

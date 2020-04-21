@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         /* Start Cursor Select */
-        Button startCursorSelect = (Button) findViewById(R.id.start_2d);
+        Button startCursorSelect = (Button) findViewById(R.id.start_cursor);
         startCursorSelect.setOnClickListener((v) -> {
             Intent intent = new Intent(this, CursorSelectActivity.class);
             Bundle bundle = new Bundle();
