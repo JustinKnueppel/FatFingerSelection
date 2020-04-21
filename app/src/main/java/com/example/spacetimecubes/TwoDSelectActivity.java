@@ -132,6 +132,15 @@ public class TwoDSelectActivity extends AppCompatActivity {
         delayedHide(100);
     }
 
+    /*
+     * Get top left corner of cursor svg
+     */
+    private float[] getCursorTopLeft() {
+        float x = _cursor.getX();
+        float y = _cursor.getY();
+        return new float[] {x, y};
+    }
+
     private void toggle() {
         if (mVisible) {
             hide();
@@ -177,7 +186,8 @@ public class TwoDSelectActivity extends AppCompatActivity {
     private final View.OnClickListener submitButtonHandler = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Log.d("Cursor Position", "X: " + _cursor.getX() + " Y " + _cursor.getY());
+            float[] coords = getCursorTopLeft();
+            Log.d("Cursor Position", "X: " + coords[0] + " Y " + coords[1]);
         }
     };
 
