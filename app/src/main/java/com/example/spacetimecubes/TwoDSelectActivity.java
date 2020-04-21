@@ -206,14 +206,20 @@ public class TwoDSelectActivity extends AppCompatActivity {
         return new Coordinates<>(x, y);
     }
 
+    private final float PIXELS_PER_DP = 3;
+    private final float MARGIN = 5 * PIXELS_PER_DP;
+    private final float CIRCLE_WIDTH = 10 * PIXELS_PER_DP;
+    private final float SPACING = 10 * PIXELS_PER_DP;
     private Coordinates<Float> getViewDotCoordinates(Coordinates<Integer> dotCoordinates) {
-        final float PIXELS_PER_DP = 3;
-        final float MARGIN = 5 * PIXELS_PER_DP;
-        final float CIRCLE_WIDTH = 10 * PIXELS_PER_DP;
-        final float SPACING = 10 * PIXELS_PER_DP;
         float x = MARGIN + (dotCoordinates.getX() - 1) * (CIRCLE_WIDTH + SPACING) + CIRCLE_WIDTH / 2;
         float y = MARGIN + (dotCoordinates.getY() - 1) * (CIRCLE_WIDTH + SPACING) + CIRCLE_WIDTH / 2;
         return new Coordinates<>(x, y);
+    }
+
+    private double distance(Coordinates<Float> coordinateOne, Coordinates<Float> coordinateTwo) {
+        double xdiff = coordinateOne.getX() - coordinateTwo.getX();
+        double ydiff = coordinateOne.getY() - coordinateTwo.getY();
+        return Math.sqrt(Math.pow(xdiff, 2) + Math.pow(ydiff, 2));
     }
 
     /* Temporary */
@@ -221,18 +227,28 @@ public class TwoDSelectActivity extends AppCompatActivity {
         _cursor.setX(newCoords.getX());
         _cursor.setY(newCoords.getY());
     }
-    private int coordx = 1;
-    private int coordy = 1;
+    private int dotx = 1;
+    private int doty = 1;
     private final View.OnClickListener submitButtonHandler = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Coordinates<Float> coords = getCursorTopLeft();
-            Coordinates<Integer> dotCoords = new Coordinates<>(coordx, coordy);
+            Coordinates<Integer> dotCoords = new Coordinates<>(dotx, doty);
             Coordinates<Float> viewDotCoords = getViewDotCoordinates(dotCoords);
-            setCursorCoordinates(viewDotCoords);
-            coordx++;
-            coordy++;
-            Log.d("Cursor Position", "X: " + coords.getX() + " Y " + coords.getY());
+            Coordinates<Float> mouseCoords = getCursorTopLeft();
+
+            float dx = Math.abs(viewDotCoords.getX() - mouseCoords.getX());
+            float dy = Math.abs(viewDotCoords.getY() - mouseCoords.getY());
+
+            double pixelDistance = distance(viewDotCoords, mouseCoords);
+            double pixelDistanceFromCircle = pixelDistance < CIRCLE_WIDTH ?
+                    0 :
+                    pixelDistance - CIRCLE_WIDTH/2;
+            double normalizedDistanceFromCircle = pixelDistanceFromCircle/CIRCLE_WIDTH;
+
+            Log.d("Cursor Position", "X: " + mouseCoords.getX() + " Y " + mouseCoords.getY());
+            Log.d("Missed By", "X: " + dx + " Y " + dy);
+            Log.d("Missed By", String.format("%f pixels away \n", pixelDistanceFromCircle));
+            Log.d("Missed By", String.format("%f circles away \n", normalizedDistanceFromCircle));
         }
     };
 
