@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,8 @@ public class CursorSelectActivity extends AppCompatActivity {
     private String[] images;
     private int imageCounter;
     private Coordinates<Integer> dotPosition;
+    private long startTime;
+    private long endTime;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -125,6 +128,7 @@ public class CursorSelectActivity extends AppCompatActivity {
         int id = getResources().getIdentifier(firstImage, "drawable", getPackageName());
         dotPosition = getCoordinatesFromFilename(firstImage);
         _matrixView.setImageResource(id);
+        startTime = System.nanoTime();
 
         _submitButton.setOnClickListener(submitButtonHandler);
 
@@ -244,6 +248,9 @@ public class CursorSelectActivity extends AppCompatActivity {
     private final View.OnClickListener submitButtonHandler = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            endTime = System.nanoTime();
+            Log.d("Time taken", Long.toString((endTime - startTime)/1000000) + " milliseconds");
+
             Coordinates<Float> viewDotCoords = getViewDotCoordinates(dotPosition);
             Coordinates<Float> mouseCoords = getCursorTopLeft();
 
@@ -267,6 +274,7 @@ public class CursorSelectActivity extends AppCompatActivity {
             String nextImage = images[imageCounter];
             dotPosition = getCoordinatesFromFilename(nextImage);
             loadNextImage(nextImage);
+            startTime = System.nanoTime();
         }
     };
 
