@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -233,6 +234,7 @@ public class TwoDSelectActivity extends AppCompatActivity {
             Log.d("Missed By", "X: " + dx + " Y " + dy);
             Data.processPixelDistance(pixelDistanceFromCircle);
             Data.processCircleDistance(normalizedDistanceFromCircle);
+
         }
     };
 

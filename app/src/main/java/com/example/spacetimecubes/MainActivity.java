@@ -11,6 +11,9 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    private int currentImage = 0;
+    int[] images = {R.drawable.dots_0101, R.drawable.dots_0106, R.drawable.dots_0116, R.drawable.dots_0302, R.drawable.dots_0313, R.drawable.dots_0706, R.drawable.dots_0711, R.drawable.dots_0901, R.drawable.dots_0909, R.drawable.dots_0916, R.drawable.dots_1207, R.drawable.dots_1315, R.drawable.dots_1403, R.drawable.dots_1601, R.drawable.dots_1611, R.drawable.dots_1616};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
