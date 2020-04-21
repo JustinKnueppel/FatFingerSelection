@@ -231,8 +231,8 @@ public class TwoDSelectActivity extends AppCompatActivity {
 
             Log.d("Cursor Position", "X: " + mouseCoords.getX() + " Y " + mouseCoords.getY());
             Log.d("Missed By", "X: " + dx + " Y " + dy);
-            Log.d("Missed By", String.format("%f pixels away \n", pixelDistanceFromCircle));
-            Log.d("Missed By", String.format("%f circles away \n", normalizedDistanceFromCircle));
+            Data.processPixelDistance(pixelDistanceFromCircle);
+            Data.processCircleDistance(normalizedDistanceFromCircle);
         }
     };
 
