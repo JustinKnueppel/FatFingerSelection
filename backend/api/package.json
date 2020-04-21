@@ -1,0 +1,15 @@
+{
+  "name": "selection_api",
+  "version": "1.0.0",
+  "description": "Interface selection database",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Justin Knueppel",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql": "^2.18.1"
+  }
+}
