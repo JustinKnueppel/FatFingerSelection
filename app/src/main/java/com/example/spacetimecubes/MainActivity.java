@@ -17,18 +17,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Hello World Button
-        Button helloWorld = (Button) findViewById(R.id.pushMe);
-
-        // Implement click function
-        helloWorld.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Hello World!", Toast.LENGTH_SHORT)
-                        .show();
-            }
-        });
-
         /* Start 2D Activity */
         Button start2D = (Button) findViewById(R.id.start_2d);
         start2D.setOnClickListener((v) -> {
@@ -39,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        /* Start Touch Select */
         Button startTouchSelect = (Button) findViewById(R.id.start_touch_select);
-
         startTouchSelect.setOnClickListener(v -> {
             Intent intent = new Intent(this, TouchSelectActivity.class);
             Bundle bundle = new Bundle();

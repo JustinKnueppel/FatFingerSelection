@@ -5,12 +5,17 @@ import android.annotation.SuppressLint;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -19,6 +24,8 @@ import android.widget.ImageView;
 public class TouchSelectActivity extends AppCompatActivity {
     private Coordinates<Integer> _dotCoordinates;
     private ImageView _dotMatrix;
+    private String[] images;
+    private int imageCounter;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -78,6 +85,22 @@ public class TouchSelectActivity extends AppCompatActivity {
 
         _dotCoordinates = new Coordinates<>(1, 1);
         _dotMatrix = findViewById(R.id.dot_matrix_touch);
+
+        Intent i = getIntent();
+        Bundle extras = i.getExtras();
+
+        if (extras != null) {
+            images = i.getStringArrayExtra("images");
+
+            List<String> imageList = Arrays.asList(images);
+            Collections.shuffle(imageList);
+            imageList.toArray(images);
+        }
+        imageCounter = 0;
+
+        String firstImage = images[0];
+        int id = getResources().getIdentifier(firstImage, "drawable", getPackageName());
+        _dotMatrix.setImageResource(id);
 
         _dotMatrix.setOnTouchListener(dotMatrixOnTouchListener);
 
@@ -153,27 +176,42 @@ public class TouchSelectActivity extends AppCompatActivity {
         return Math.sqrt(Math.pow(xdiff, 2) + Math.pow(ydiff, 2));
     }
 
+    private void loadNextImage() {
+        String nextImage = images[imageCounter];
+        int id = getResources().getIdentifier(nextImage, "drawable", getPackageName());
+        _dotMatrix.setImageResource(id);
+    }
     private View.OnTouchListener dotMatrixOnTouchListener = new View.OnTouchListener() {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            float touchX = event.getX();
-            float touchY = event.getY();
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                float touchX = event.getX();
+                float touchY = event.getY();
 
-            Coordinates<Float> touchCoordinates = new Coordinates<>(touchX, touchY);
-            Coordinates<Float> dotViewCoordinates = getViewDotCoordinates(_dotCoordinates);
+                Coordinates<Float> touchCoordinates = new Coordinates<>(touchX, touchY);
+                Coordinates<Float> dotViewCoordinates = getViewDotCoordinates(_dotCoordinates);
 
-            double pixelDistance = distance(touchCoordinates, dotViewCoordinates);
-            double pixelDistanceFromCircle = pixelDistance < CIRCLE_WIDTH ?
-                    0 :
-                    pixelDistance - CIRCLE_WIDTH/2;
-            double normalizedDistanceFromCircle = pixelDistanceFromCircle/CIRCLE_WIDTH;
+                double pixelDistance = distance(touchCoordinates, dotViewCoordinates);
+                double pixelDistanceFromCircle = pixelDistance < CIRCLE_WIDTH ?
+                        0 :
+                        pixelDistance - CIRCLE_WIDTH / 2;
+                double normalizedDistanceFromCircle = pixelDistanceFromCircle / CIRCLE_WIDTH;
 
-            Log.d("Touched", "X: " + touchX + " Y: " + touchY);
-            Data.processPixelDistance(pixelDistanceFromCircle);
-            Data.processCircleDistance(normalizedDistanceFromCircle);
+                Log.d("Touched", "X: " + touchX + " Y: " + touchY);
+                Data.processPixelDistance(pixelDistanceFromCircle);
+                Data.processCircleDistance(normalizedDistanceFromCircle);
 
-            return true;
+                imageCounter++;
+                if (imageCounter >= images.length) {
+                    finish();
+                    return true;
+                }
+                loadNextImage();
+
+                return true;
+            }
+            return false;
         }
     };
 }

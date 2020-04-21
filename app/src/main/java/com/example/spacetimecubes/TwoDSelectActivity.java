@@ -273,11 +273,9 @@ public class TwoDSelectActivity extends AppCompatActivity {
 
             imageCounter++;
             if (imageCounter >= images.length) {
-                Log.d("Counter Issue", "Image counter inside if " + imageCounter);
                 finish();
                 return;
             }
-            Log.d("Counter Issue", "Image counter outside if " + imageCounter);
             loadNextImage();
         }
     };
