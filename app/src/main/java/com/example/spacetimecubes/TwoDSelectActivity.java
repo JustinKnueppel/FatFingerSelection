@@ -135,10 +135,10 @@ public class TwoDSelectActivity extends AppCompatActivity {
     /*
      * Get top left corner of cursor svg
      */
-    private float[] getCursorTopLeft() {
+    private Coordinates<Float> getCursorTopLeft() {
         float x = _cursor.getX();
         float y = _cursor.getY();
-        return new float[] {x, y};
+        return new Coordinates<>(x, y);
     }
 
     private void toggle() {
@@ -183,11 +183,56 @@ public class TwoDSelectActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
+    private class Coordinates<T> {
+        private T x;
+        private T y;
+        public Coordinates(T x, T y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public T getX() {
+            return x;
+        }
+
+        public T getY() {
+            return y;
+        }
+    }
+
+    private Coordinates<Integer> getCoordinatesFromFilename(String filename) {
+        int x = Integer.parseInt(filename.substring(0, 2));
+        int y = Integer.parseInt(filename.substring(2, 4));
+        return new Coordinates<>(x, y);
+    }
+
+    private Coordinates<Float> getViewDotCoordinates(Coordinates<Integer> dotCoordinates) {
+        final float PIXELS_PER_DP = 3;
+        final float MARGIN = 5 * PIXELS_PER_DP;
+        final float CIRCLE_WIDTH = 10 * PIXELS_PER_DP;
+        final float SPACING = 10 * PIXELS_PER_DP;
+        float x = MARGIN + (dotCoordinates.getX() - 1) * (CIRCLE_WIDTH + SPACING) + CIRCLE_WIDTH / 2;
+        float y = MARGIN + (dotCoordinates.getY() - 1) * (CIRCLE_WIDTH + SPACING) + CIRCLE_WIDTH / 2;
+        return new Coordinates<>(x, y);
+    }
+
+    /* Temporary */
+    private void setCursorCoordinates(Coordinates<Float> newCoords) {
+        _cursor.setX(newCoords.getX());
+        _cursor.setY(newCoords.getY());
+    }
+    private int coordx = 1;
+    private int coordy = 1;
     private final View.OnClickListener submitButtonHandler = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            float[] coords = getCursorTopLeft();
-            Log.d("Cursor Position", "X: " + coords[0] + " Y " + coords[1]);
+            Coordinates<Float> coords = getCursorTopLeft();
+            Coordinates<Integer> dotCoords = new Coordinates<>(coordx, coordy);
+            Coordinates<Float> viewDotCoords = getViewDotCoordinates(dotCoords);
+            setCursorCoordinates(viewDotCoords);
+            coordx++;
+            coordy++;
+            Log.d("Cursor Position", "X: " + coords.getX() + " Y " + coords.getY());
         }
     };
 
