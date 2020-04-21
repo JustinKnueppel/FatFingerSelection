@@ -188,6 +188,7 @@ public class TwoDSelectActivity extends AppCompatActivity {
             switch (event.getAction()) {
 
                 case MotionEvent.ACTION_DOWN:
+                    Log.d("Touch Pad", "Mouse Down");
 
                     oldMouseX = event.getRawX();
                     oldMouseY = event.getRawY();

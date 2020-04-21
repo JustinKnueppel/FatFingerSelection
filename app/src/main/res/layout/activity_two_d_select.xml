@@ -1,71 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayout"
+    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0099cc"
     android:orientation="vertical"
     tools:context=".TwoDSelectActivity">
 
-    <!-- The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc. -->
-
-    <!--        android:text="@string/dummy_content"-->
-    <!--        android:textColor="#33b5e5"-->
-    <!--        android:textSize="50sp"-->
-    <!--        android:textStyle="bold" />-->
-
-
     <ImageView
         android:id="@+id/adjacency_matrix"
-        android:layout_width="428dp"
-        android:layout_height="378dp"
+        android:layout_width="match_parent"
+        android:layout_height="380dp"
 
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="0dp"
         android:contentDescription="@string/matrix_alt"
         android:gravity="center"
         android:keepScreenOn="true"
-        android:src="@drawable/adjacencymatrix"
-        app:layout_constraintBottom_toTopOf="@+id/track_pad"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:src="@drawable/adjacencymatrix" />
 
     <View
         android:id="@+id/track_pad"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:background="@drawable/my_border"
+        android:layout_height="200dp"
+        android:layout_alignParentStart="true"
 
-        app:layout_constraintBottom_toTopOf="@id/two_d_submit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/adjacency_matrix" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
+        android:background="@drawable/my_border" />
 
     <Button
         android:id="@+id/two_d_submit"
         style="?metaButtonBarButtonStyle"
-        android:layout_width="428dp"
-        android:layout_height="89dp"
-        android:text="@string/select_button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/track_pad" />
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:text="@string/select_button" />
 
     <ImageView
         android:id="@+id/mousePointer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/adjacency_matrix"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="172dp"
+        android:layout_marginTop="190dp"
+        android:layout_marginEnd="172dp"
+        android:layout_marginBottom="162dp"
         android:contentDescription="@string/mouse_alt"
-        app:layout_constraintBottom_toBottomOf="@+id/adjacency_matrix"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/mouse_pointer" />
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
