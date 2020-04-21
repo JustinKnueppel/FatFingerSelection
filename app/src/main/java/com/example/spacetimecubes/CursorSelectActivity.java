@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +27,7 @@ public class CursorSelectActivity extends AppCompatActivity {
     private Button _submitButton;
     private String[] images;
     private int imageCounter;
+    private Coordinates<Integer> dotPosition;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -100,12 +100,6 @@ public class CursorSelectActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        Bundle b = getIntent().getExtras();
-//        String filename = null;
-//        if (b != null) {
-//            filename = b.getString("Image Source");
-//        }
-
         Intent i = getIntent();
         Bundle extras = i.getExtras();
 
@@ -129,6 +123,7 @@ public class CursorSelectActivity extends AppCompatActivity {
 
         String firstImage = images[0];
         int id = getResources().getIdentifier(firstImage, "drawable", getPackageName());
+        dotPosition = getCoordinatesFromFilename(firstImage);
         _matrixView.setImageResource(id);
 
         _submitButton.setOnClickListener(submitButtonHandler);
@@ -214,8 +209,8 @@ public class CursorSelectActivity extends AppCompatActivity {
 
 
     private Coordinates<Integer> getCoordinatesFromFilename(String filename) {
-        int x = Integer.parseInt(filename.substring(0, 2));
-        int y = Integer.parseInt(filename.substring(2, 4));
+        int x = Integer.parseInt(filename.substring(5, 7));
+        int y = Integer.parseInt(filename.substring(7, 9));
         return new Coordinates<>(x, y);
     }
 
@@ -235,8 +230,7 @@ public class CursorSelectActivity extends AppCompatActivity {
         return Math.sqrt(Math.pow(xdiff, 2) + Math.pow(ydiff, 2));
     }
 
-    private void loadNextImage() {
-        String nextImage = images[imageCounter];
+    private void loadNextImage(String nextImage) {
         int id = getResources().getIdentifier(nextImage, "drawable", getPackageName());
         _matrixView.setImageResource(id);
 
@@ -247,13 +241,10 @@ public class CursorSelectActivity extends AppCompatActivity {
         _cursor.setX(newCoords.getX());
         _cursor.setY(newCoords.getY());
     }
-    private int dotx = 1;
-    private int doty = 1;
     private final View.OnClickListener submitButtonHandler = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Coordinates<Integer> dotCoords = new Coordinates<>(dotx, doty);
-            Coordinates<Float> viewDotCoords = getViewDotCoordinates(dotCoords);
+            Coordinates<Float> viewDotCoords = getViewDotCoordinates(dotPosition);
             Coordinates<Float> mouseCoords = getCursorTopLeft();
 
             float dx = Math.abs(viewDotCoords.getX() - mouseCoords.getX());
@@ -265,8 +256,6 @@ public class CursorSelectActivity extends AppCompatActivity {
                     pixelDistance - CIRCLE_WIDTH/2;
             double normalizedDistanceFromCircle = pixelDistanceFromCircle/CIRCLE_WIDTH;
 
-            Log.d("Cursor Position", "X: " + mouseCoords.getX() + " Y " + mouseCoords.getY());
-            Log.d("Missed By", "X: " + dx + " Y " + dy);
             Data.processPixelDistance(pixelDistanceFromCircle);
             Data.processCircleDistance(normalizedDistanceFromCircle);
 
@@ -275,7 +264,9 @@ public class CursorSelectActivity extends AppCompatActivity {
                 finish();
                 return;
             }
-            loadNextImage();
+            String nextImage = images[imageCounter];
+            dotPosition = getCoordinatesFromFilename(nextImage);
+            loadNextImage(nextImage);
         }
     };
 
@@ -286,8 +277,6 @@ public class CursorSelectActivity extends AppCompatActivity {
             switch (event.getAction()) {
 
                 case MotionEvent.ACTION_DOWN:
-                    Log.d("Touch Pad", "Mouse Down");
-
                     oldMouseX = event.getRawX();
                     oldMouseY = event.getRawY();
 

@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,10 +21,10 @@ import java.util.List;
  * status bar and navigation/system bar) with user interaction.
  */
 public class TouchSelectActivity extends AppCompatActivity {
-    private Coordinates<Integer> _dotCoordinates;
     private ImageView _dotMatrix;
     private String[] images;
     private int imageCounter;
+    private Coordinates<Integer> dotPosition;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -83,7 +82,6 @@ public class TouchSelectActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_touch_select);
 
-        _dotCoordinates = new Coordinates<>(1, 1);
         _dotMatrix = findViewById(R.id.dot_matrix_touch);
 
         Intent i = getIntent();
@@ -99,6 +97,7 @@ public class TouchSelectActivity extends AppCompatActivity {
         imageCounter = 0;
 
         String firstImage = images[0];
+        dotPosition = getCoordinatesFromFilename(firstImage);
         int id = getResources().getIdentifier(firstImage, "drawable", getPackageName());
         _dotMatrix.setImageResource(id);
 
@@ -155,8 +154,8 @@ public class TouchSelectActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
     private Coordinates<Integer> getCoordinatesFromFilename(String filename) {
-        int x = Integer.parseInt(filename.substring(0, 2));
-        int y = Integer.parseInt(filename.substring(2, 4));
+        int x = Integer.parseInt(filename.substring(5, 7));
+        int y = Integer.parseInt(filename.substring(7, 9));
         return new Coordinates<>(x, y);
     }
 
@@ -176,8 +175,7 @@ public class TouchSelectActivity extends AppCompatActivity {
         return Math.sqrt(Math.pow(xdiff, 2) + Math.pow(ydiff, 2));
     }
 
-    private void loadNextImage() {
-        String nextImage = images[imageCounter];
+    private void loadNextImage(String nextImage) {
         int id = getResources().getIdentifier(nextImage, "drawable", getPackageName());
         _dotMatrix.setImageResource(id);
     }
@@ -190,7 +188,7 @@ public class TouchSelectActivity extends AppCompatActivity {
                 float touchY = event.getY();
 
                 Coordinates<Float> touchCoordinates = new Coordinates<>(touchX, touchY);
-                Coordinates<Float> dotViewCoordinates = getViewDotCoordinates(_dotCoordinates);
+                Coordinates<Float> dotViewCoordinates = getViewDotCoordinates(dotPosition);
 
                 double pixelDistance = distance(touchCoordinates, dotViewCoordinates);
                 double pixelDistanceFromCircle = pixelDistance < CIRCLE_WIDTH ?
@@ -198,7 +196,6 @@ public class TouchSelectActivity extends AppCompatActivity {
                         pixelDistance - CIRCLE_WIDTH / 2;
                 double normalizedDistanceFromCircle = pixelDistanceFromCircle / CIRCLE_WIDTH;
 
-                Log.d("Touched", "X: " + touchX + " Y: " + touchY);
                 Data.processPixelDistance(pixelDistanceFromCircle);
                 Data.processCircleDistance(normalizedDistanceFromCircle);
 
@@ -207,7 +204,9 @@ public class TouchSelectActivity extends AppCompatActivity {
                     finish();
                     return true;
                 }
-                loadNextImage();
+                String nextImage = images[imageCounter];
+                dotPosition = getCoordinatesFromFilename(nextImage);
+                loadNextImage(nextImage);
 
                 return true;
             }
