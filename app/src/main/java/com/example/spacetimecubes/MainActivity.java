@@ -10,9 +10,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-
-    private int currentImage = -1;
-    int[] images = {R.drawable.dots_0101, R.drawable.dots_0106, R.drawable.dots_0116, R.drawable.dots_0302, R.drawable.dots_0313, R.drawable.dots_0706, R.drawable.dots_0711, R.drawable.dots_0901, R.drawable.dots_0909, R.drawable.dots_0916, R.drawable.dots_1207, R.drawable.dots_1315, R.drawable.dots_1403, R.drawable.dots_1601, R.drawable.dots_1611, R.drawable.dots_1616};
+    String[] images = {"dots_0101", "dots_0106", "dots_0116", "dots_0302", "dots_0313", "dots_0706", "dots_0711", "dots_0901", "dots_0909", "dots_0916", "dots_1207", "dots_1315", "dots_1403", "dots_1601", "dots_1611", "dots_1616"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +31,11 @@ public class MainActivity extends AppCompatActivity {
 
         /* Start 2D Activity */
         Button start2D = (Button) findViewById(R.id.start_2d);
-
         start2D.setOnClickListener((v) -> {
-            currentImage = currentImage + 1;
             Intent intent = new Intent(this, TwoDSelectActivity.class);
+            Bundle bundle = new Bundle();
+            intent.putExtra("images", images);
+            intent.putExtras(bundle);
             startActivity(intent);
         });
 
@@ -44,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
 
         startTouchSelect.setOnClickListener(v -> {
             Intent intent = new Intent(this, TouchSelectActivity.class);
+            Bundle bundle = new Bundle();
+            intent.putExtra("images", images);
+            intent.putExtras(bundle);
             startActivity(intent);
         });
     }

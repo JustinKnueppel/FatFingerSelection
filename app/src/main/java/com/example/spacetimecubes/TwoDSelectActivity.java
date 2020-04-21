@@ -14,6 +14,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
@@ -22,6 +27,8 @@ public class TwoDSelectActivity extends AppCompatActivity {
     private ImageView _cursor;
     private ImageView _matrixView;
     private Button _submitButton;
+    private String[] images;
+    private int imageCounter;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -94,6 +101,24 @@ public class TwoDSelectActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+//        Bundle b = getIntent().getExtras();
+//        String filename = null;
+//        if (b != null) {
+//            filename = b.getString("Image Source");
+//        }
+
+        Intent i = getIntent();
+        Bundle extras = i.getExtras();
+
+        if (extras != null) {
+            images = i.getStringArrayExtra("images");
+
+            List<String> imageList = Arrays.asList(images);
+            Collections.shuffle(imageList);
+            imageList.toArray(images);
+        }
+        imageCounter = 0;
+
         setContentView(R.layout.activity_two_d_select);
 
         mVisible = true;
@@ -102,6 +127,10 @@ public class TwoDSelectActivity extends AppCompatActivity {
         _cursor = findViewById(R.id.mousePointer);
         _matrixView = findViewById(R.id.dot_matrix);
         _submitButton = findViewById(R.id.two_d_submit);
+
+        String firstImage = images[0];
+        int id = getResources().getIdentifier(firstImage, "drawable", getPackageName());
+        _matrixView.setImageResource(id);
 
         _submitButton.setOnClickListener(submitButtonHandler);
 
@@ -207,6 +236,13 @@ public class TwoDSelectActivity extends AppCompatActivity {
         return Math.sqrt(Math.pow(xdiff, 2) + Math.pow(ydiff, 2));
     }
 
+    private void loadNextImage() {
+        String nextImage = images[imageCounter];
+        int id = getResources().getIdentifier(nextImage, "drawable", getPackageName());
+        _matrixView.setImageResource(id);
+
+    }
+
     /* Temporary */
     private void setCursorCoordinates(Coordinates<Float> newCoords) {
         _cursor.setX(newCoords.getX());
@@ -235,8 +271,14 @@ public class TwoDSelectActivity extends AppCompatActivity {
             Data.processPixelDistance(pixelDistanceFromCircle);
             Data.processCircleDistance(normalizedDistanceFromCircle);
 
-            finish();
-
+            imageCounter++;
+            if (imageCounter >= images.length) {
+                Log.d("Counter Issue", "Image counter inside if " + imageCounter);
+                finish();
+                return;
+            }
+            Log.d("Counter Issue", "Image counter outside if " + imageCounter);
+            loadNextImage();
         }
     };
 
