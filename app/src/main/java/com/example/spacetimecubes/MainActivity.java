@@ -35,6 +35,13 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, TwoDSelectActivity.class);
             startActivity(intent);
         });
+
+        Button startTouchSelect = (Button) findViewById(R.id.start_touch_select);
+
+        startTouchSelect.setOnClickListener(v -> {
+            Intent intent = new Intent(this, TouchSelectActivity.class);
+            startActivity(intent);
+        });
     }
 
 }

@@ -10,7 +10,7 @@
     tools:context=".TwoDSelectActivity">
 
     <ImageView
-        android:id="@+id/adjacency_matrix"
+        android:id="@+id/dot_matrix_touch"
         android:layout_width="320dp"
         android:layout_height="320dp"
 

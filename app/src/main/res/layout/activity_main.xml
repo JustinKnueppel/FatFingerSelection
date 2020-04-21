@@ -24,4 +24,13 @@
         android:text="Start 2D"
         tools:layout_editor_absoluteX="161dp"
         tools:layout_editor_absoluteY="248dp" />
+
+    <Button
+        android:id="@+id/start_touch_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/touch_select_start_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="453dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

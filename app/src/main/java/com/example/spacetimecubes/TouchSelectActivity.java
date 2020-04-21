@@ -10,17 +10,15 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class TwoDSelectActivity extends AppCompatActivity {
-    private ImageView _cursor;
-    private ImageView _matrixView;
-    private Button _submitButton;
+public class TouchSelectActivity extends AppCompatActivity {
+    private Coordinates<Integer> _dotCoordinates;
+    private ImageView _dotMatrix;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -93,19 +91,15 @@ public class TwoDSelectActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_two_d_select);
+        setContentView(R.layout.activity_touch_select);
+
+        _dotCoordinates = new Coordinates<>(1, 1);
+        _dotMatrix = findViewById(R.id.dot_matrix_touch);
+
+        _dotMatrix.setOnTouchListener(dotMatrixOnTouchListener);
 
         mVisible = true;
-        mContentView = findViewById(R.id.dot_matrix);
-
-        _cursor = findViewById(R.id.mousePointer);
-        _matrixView = findViewById(R.id.dot_matrix);
-        _submitButton = findViewById(R.id.two_d_submit);
-
-        _submitButton.setOnClickListener(submitButtonHandler);
-
-        View trackPad = findViewById(R.id.track_pad);
-        trackPad.setOnTouchListener(trackPadTouchListener);
+        mContentView = findViewById(R.id.dot_matrix_touch);
 
 
         // Set up the user interaction to manually show or hide the system UI.
@@ -116,10 +110,6 @@ public class TwoDSelectActivity extends AppCompatActivity {
             }
         });
 
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        findViewById(R.id.two_d_submit).setOnTouchListener(mDelayHideTouchListener);
     }
 
     @Override
@@ -130,15 +120,6 @@ public class TwoDSelectActivity extends AppCompatActivity {
         // created, to briefly hint to the user that UI controls
         // are available.
         delayedHide(100);
-    }
-
-    /*
-     * Get top left corner of cursor svg
-     */
-    private Coordinates<Float> getCursorTopLeft() {
-        float x = _cursor.getX();
-        float y = _cursor.getY();
-        return new Coordinates<>(x, y);
     }
 
     private void toggle() {
@@ -182,8 +163,6 @@ public class TwoDSelectActivity extends AppCompatActivity {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
-
-
     private Coordinates<Integer> getCoordinatesFromFilename(String filename) {
         int x = Integer.parseInt(filename.substring(0, 2));
         int y = Integer.parseInt(filename.substring(2, 4));
@@ -206,81 +185,25 @@ public class TwoDSelectActivity extends AppCompatActivity {
         return Math.sqrt(Math.pow(xdiff, 2) + Math.pow(ydiff, 2));
     }
 
-    /* Temporary */
-    private void setCursorCoordinates(Coordinates<Float> newCoords) {
-        _cursor.setX(newCoords.getX());
-        _cursor.setY(newCoords.getY());
-    }
-    private int dotx = 1;
-    private int doty = 1;
-    private final View.OnClickListener submitButtonHandler = new View.OnClickListener() {
+    private View.OnTouchListener dotMatrixOnTouchListener = new View.OnTouchListener() {
+
         @Override
-        public void onClick(View v) {
-            Coordinates<Integer> dotCoords = new Coordinates<>(dotx, doty);
-            Coordinates<Float> viewDotCoords = getViewDotCoordinates(dotCoords);
-            Coordinates<Float> mouseCoords = getCursorTopLeft();
+        public boolean onTouch(View v, MotionEvent event) {
+            float touchX = event.getRawX();
+            float touchY = event.getRawY();
 
-            float dx = Math.abs(viewDotCoords.getX() - mouseCoords.getX());
-            float dy = Math.abs(viewDotCoords.getY() - mouseCoords.getY());
+            Coordinates<Float> touchCoordinates = new Coordinates<>(touchX, touchY);
+            Coordinates<Float> dotViewCoordinates = getViewDotCoordinates(_dotCoordinates);
 
-            double pixelDistance = distance(viewDotCoords, mouseCoords);
+            double pixelDistance = distance(touchCoordinates, dotViewCoordinates);
             double pixelDistanceFromCircle = pixelDistance < CIRCLE_WIDTH ?
                     0 :
                     pixelDistance - CIRCLE_WIDTH/2;
             double normalizedDistanceFromCircle = pixelDistanceFromCircle/CIRCLE_WIDTH;
 
-            Log.d("Cursor Position", "X: " + mouseCoords.getX() + " Y " + mouseCoords.getY());
-            Log.d("Missed By", "X: " + dx + " Y " + dy);
             Log.d("Missed By", String.format("%f pixels away \n", pixelDistanceFromCircle));
             Log.d("Missed By", String.format("%f circles away \n", normalizedDistanceFromCircle));
-        }
-    };
 
-    float oldMouseX, oldMouseY, dX, dY;
-    private final View.OnTouchListener trackPadTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            switch (event.getAction()) {
-
-                case MotionEvent.ACTION_DOWN:
-                    Log.d("Touch Pad", "Mouse Down");
-
-                    oldMouseX = event.getRawX();
-                    oldMouseY = event.getRawY();
-
-                    break;
-
-                case MotionEvent.ACTION_MOVE:
-                    dX = event.getRawX() - oldMouseX;
-                    dY = event.getRawY() - oldMouseY;
-                    oldMouseX = event.getRawX();
-                    oldMouseY = event.getRawY();
-
-                    /* Make sure cursor within constraints */
-                    float cursorHeight = _cursor.getHeight();
-                    /* Don't let the cursor get too high */
-                    float topConstraint = _matrixView.getTop() + (float)0.8 * cursorHeight;
-                    float bottomConstraint = _matrixView.getBottom();
-                    float leftConstraint = _matrixView.getLeft();
-                    float  rightConstraint = _matrixView.getRight();
-
-                    float newCursorX = _cursor.getX() + dX;
-                    float newCursorY = _cursor.getY() + dY;
-
-                    boolean movementAllowed = newCursorX >= leftConstraint && newCursorX <= rightConstraint &&
-                            newCursorY >= topConstraint && newCursorY <= bottomConstraint;
-
-                    if (true || movementAllowed) {
-                        _cursor.animate()
-                                .x(newCursorX)
-                                .y(newCursorY)
-                                .setDuration(0)
-                                .start();
-                    }
-                    break;
-                default:
-                    return false;
-            }
             return true;
         }
     };

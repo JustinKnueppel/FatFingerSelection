@@ -6,4 +6,8 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="matrix_alt">Adjacency Matrix</string>
     <string name="mouse_alt">Mouse Pointer</string>
+    <string name="touch_select_start_button">Touch Select</string>
+
+    <string name="title_activity_touch_select">TouchSelectActivity</string>
+    <string name="dummy_button">Dummy Button</string>
 </resources>
