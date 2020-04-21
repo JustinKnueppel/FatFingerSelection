@@ -8,15 +8,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -190,7 +187,8 @@ public class TouchSelectActivity extends AppCompatActivity {
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 endTime = System.nanoTime();
-                Log.d("Time taken", Long.toString((endTime - startTime)/1000000) + " milliseconds");
+                Data.processTimeTaken(startTime, endTime);
+
                 float touchX = event.getX();
                 float touchY = event.getY();
 

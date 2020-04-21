@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -249,7 +248,7 @@ public class CursorSelectActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             endTime = System.nanoTime();
-            Log.d("Time taken", Long.toString((endTime - startTime)/1000000) + " milliseconds");
+            Data.processTimeTaken(startTime, endTime);
 
             Coordinates<Float> viewDotCoords = getViewDotCoordinates(dotPosition);
             Coordinates<Float> mouseCoords = getCursorTopLeft();
