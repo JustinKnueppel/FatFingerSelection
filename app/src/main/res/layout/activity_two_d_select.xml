@@ -18,7 +18,7 @@
         android:contentDescription="@string/matrix_alt"
         android:gravity="center"
         android:keepScreenOn="true"
-        android:src="@drawable/adjacencymatrix" />
+        android:src="@drawable/dots_0101" />
 
     <View
         android:id="@+id/track_pad"
