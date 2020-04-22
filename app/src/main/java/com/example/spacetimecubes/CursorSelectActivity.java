@@ -30,6 +30,7 @@ public class CursorSelectActivity extends AppCompatActivity {
     private Coordinates<Integer> dotPosition;
     private long startTime;
     private long endTime;
+    private Data data;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -124,9 +125,10 @@ public class CursorSelectActivity extends AppCompatActivity {
         _submitButton = findViewById(R.id.two_d_submit);
 
         String firstImage = images[0];
-        int id = getResources().getIdentifier(firstImage, "drawable", getPackageName());
+        loadImage(firstImage);
+        this.data = initData(firstImage);
+
         dotPosition = getCoordinatesFromFilename(firstImage);
-        _matrixView.setImageResource(id);
         startTime = System.nanoTime();
 
         _submitButton.setOnClickListener(submitButtonHandler);
@@ -147,6 +149,13 @@ public class CursorSelectActivity extends AppCompatActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         findViewById(R.id.two_d_submit).setOnTouchListener(mDelayHideTouchListener);
+    }
+
+    private Data initData(String imageName) {
+        float circleRadius = 10*PIXELS_PER_DP;
+        float spaceBetween = 10*PIXELS_PER_DP;
+        Data data = new Data("cursor", circleRadius, spaceBetween);
+        return data;
     }
 
     @Override
@@ -233,7 +242,7 @@ public class CursorSelectActivity extends AppCompatActivity {
         return Math.sqrt(Math.pow(xdiff, 2) + Math.pow(ydiff, 2));
     }
 
-    private void loadNextImage(String nextImage) {
+    private void loadImage(String nextImage) {
         int id = getResources().getIdentifier(nextImage, "drawable", getPackageName());
         _matrixView.setImageResource(id);
 
@@ -248,7 +257,7 @@ public class CursorSelectActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             endTime = System.nanoTime();
-            Data.processTimeTaken(startTime, endTime);
+            data.setTimeTaken(startTime, endTime);
 
             Coordinates<Float> viewDotCoords = getViewDotCoordinates(dotPosition);
             Coordinates<Float> mouseCoords = getCursorTopLeft();
@@ -262,7 +271,12 @@ public class CursorSelectActivity extends AppCompatActivity {
                     pixelDistance - CIRCLE_WIDTH/2;
             double normalizedDistanceFromCircle = pixelDistanceFromCircle/CIRCLE_WIDTH;
 
-            Data.processPixelDistance(pixelDistanceFromCircle);
+            data.setPixelDistance(pixelDistance);
+
+            /* Send data to database */
+            data.post();
+
+            /* Log normalized distance */
             Data.processCircleDistance(normalizedDistanceFromCircle);
 
             imageCounter++;
@@ -272,7 +286,9 @@ public class CursorSelectActivity extends AppCompatActivity {
             }
             String nextImage = images[imageCounter];
             dotPosition = getCoordinatesFromFilename(nextImage);
-            loadNextImage(nextImage);
+            loadImage(nextImage);
+
+            data = initData(nextImage);
             startTime = System.nanoTime();
         }
     };
