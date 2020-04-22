@@ -24,7 +24,6 @@ public class TouchSelectActivity extends AppCompatActivity {
     private ImageView _dotMatrix;
     private String[] images;
     private int imageCounter;
-    private Coordinates<Integer> dotPosition;
     private long startTime;
     private long endTime;
     private Data data;
@@ -102,11 +101,10 @@ public class TouchSelectActivity extends AppCompatActivity {
 
         String firstImage = images[0];
         this.currentImage = new DotMatrix(firstImage);
-        
-        this.dotPosition = getCoordinatesFromFilename(firstImage);
-        loadImage(firstImage);
 
-        this.data = initData(firstImage);
+        loadImage(this.currentImage);
+
+        this.data = initData(currentImage);
 
         this.startTime = System.nanoTime();
 
@@ -116,10 +114,8 @@ public class TouchSelectActivity extends AppCompatActivity {
 
     }
 
-    private Data initData(String imageName) {
-        float circleRadius = 10*PIXELS_PER_DP;
-        float spaceBetween = 10*PIXELS_PER_DP;
-        Data data = new Data("touch", circleRadius, spaceBetween);
+    private Data initData(DotMatrix dotMatrix) {
+        Data data = new Data("touch", dotMatrix);
         return data;
     }
 
@@ -169,21 +165,6 @@ public class TouchSelectActivity extends AppCompatActivity {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
-    private Coordinates<Integer> getCoordinatesFromFilename(String filename) {
-        int x = Integer.parseInt(filename.substring(5, 7));
-        int y = Integer.parseInt(filename.substring(7, 9));
-        return new Coordinates<>(x, y);
-    }
-
-    private final float PIXELS_PER_DP = 3;
-    private final float MARGIN = 5 * PIXELS_PER_DP;
-    private final float CIRCLE_WIDTH = 10 * PIXELS_PER_DP;
-    private final float SPACING = 10 * PIXELS_PER_DP;
-    private Coordinates<Float> getViewDotCoordinates(Coordinates<Integer> dotCoordinates) {
-        float x = MARGIN + (dotCoordinates.getX() - 1) * (CIRCLE_WIDTH + SPACING) + CIRCLE_WIDTH / 2;
-        float y = MARGIN + (dotCoordinates.getY() - 1) * (CIRCLE_WIDTH + SPACING) + CIRCLE_WIDTH / 2;
-        return new Coordinates<>(x, y);
-    }
 
     private double distance(Coordinates<Float> coordinateOne, Coordinates<Float> coordinateTwo) {
         double xdiff = coordinateOne.getX() - coordinateTwo.getX();
@@ -191,8 +172,8 @@ public class TouchSelectActivity extends AppCompatActivity {
         return Math.sqrt(Math.pow(xdiff, 2) + Math.pow(ydiff, 2));
     }
 
-    private void loadImage(String nextImage) {
-        int id = getResources().getIdentifier(nextImage, "drawable", getPackageName());
+    private void loadImage(DotMatrix dotMatrix) {
+        int id = getResources().getIdentifier(dotMatrix.getName(), "drawable", getPackageName());
         _dotMatrix.setImageResource(id);
     }
     private View.OnTouchListener dotMatrixOnTouchListener = new View.OnTouchListener() {
@@ -207,13 +188,13 @@ public class TouchSelectActivity extends AppCompatActivity {
                 float touchY = event.getY();
 
                 Coordinates<Float> touchCoordinates = new Coordinates<>(touchX, touchY);
-                Coordinates<Float> dotViewCoordinates = getViewDotCoordinates(dotPosition);
+                Coordinates<Float> dotViewCoordinates = currentImage.getViewCoordinates();
 
                 double pixelDistance = distance(touchCoordinates, dotViewCoordinates);
-                double pixelDistanceFromCircle = pixelDistance < CIRCLE_WIDTH ?
+                double pixelDistanceFromCircle = pixelDistance < currentImage.getCircleWidth() ?
                         0 :
-                        pixelDistance - CIRCLE_WIDTH / 2;
-                double normalizedDistanceFromCircle = pixelDistanceFromCircle / CIRCLE_WIDTH;
+                        pixelDistance - (float)currentImage.getCircleWidth() / 2;
+                double normalizedDistanceFromCircle = pixelDistanceFromCircle / currentImage.getCircleWidth();
 
                 data.setPixelDistance(pixelDistance);
 
@@ -228,11 +209,12 @@ public class TouchSelectActivity extends AppCompatActivity {
                     finish();
                     return true;
                 }
-                String nextImage = images[imageCounter];
-                dotPosition = getCoordinatesFromFilename(nextImage);
-                loadImage(nextImage);
 
-                data = initData(nextImage);
+                String nextImage = images[imageCounter];
+                currentImage = new DotMatrix(nextImage);
+                loadImage(currentImage);
+
+                data = initData(currentImage);
 
                 startTime = System.nanoTime();
 

@@ -18,10 +18,10 @@ public class Data {
     private float circle_radius;
     private float space_between;
 
-    public Data(String selection_type, float circle_radius, float space_between) {
+    public Data(String selection_type, DotMatrix dotMatrix) {
         this.selection_type = selection_type;
-        this.circle_radius = circle_radius;
-        this.space_between = space_between;
+        this.circle_radius = (float)dotMatrix.getCircleWidth() / 2;
+        this.space_between = dotMatrix.getSpaceBetween();
     }
     public void setPixelDistance(double pixelDistance) {
         this.distance_from_center = pixelDistance;

@@ -33,6 +33,26 @@ public class DotMatrix {
         return new Coordinates<>(viewX, viewY);
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public Coordinates<Integer> getTarget() {
+        return target;
+    }
+
+    public int getMargin() {
+        return margin * PIXELS_PER_DP;
+    }
+
+    public int getCircleWidth() {
+        return circleWidth * PIXELS_PER_DP;
+    }
+
+    public int getSpaceBetween() {
+        return spaceBetween * PIXELS_PER_DP;
+    }
+
     private static MatrixType getType(String name) {
         if (name.contains("spread")) {
             return MatrixType.SPREAD;
