@@ -28,6 +28,7 @@ public class TouchSelectActivity extends AppCompatActivity {
     private long startTime;
     private long endTime;
     private Data data;
+    private DotMatrix currentImage;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -100,6 +101,8 @@ public class TouchSelectActivity extends AppCompatActivity {
         this.imageCounter = 0;
 
         String firstImage = images[0];
+        this.currentImage = new DotMatrix(firstImage);
+        
         this.dotPosition = getCoordinatesFromFilename(firstImage);
         loadImage(firstImage);
 
