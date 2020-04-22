@@ -27,9 +27,10 @@ public class CursorSelectActivity extends AppCompatActivity {
     private Button _submitButton;
     private String[] images;
     private int imageCounter;
-    private Coordinates<Integer> dotPosition;
+    private DotMatrix currentImage;
     private long startTime;
     private long endTime;
+    private Data data;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -124,9 +125,11 @@ public class CursorSelectActivity extends AppCompatActivity {
         _submitButton = findViewById(R.id.two_d_submit);
 
         String firstImage = images[0];
-        int id = getResources().getIdentifier(firstImage, "drawable", getPackageName());
-        dotPosition = getCoordinatesFromFilename(firstImage);
-        _matrixView.setImageResource(id);
+        this.currentImage = new DotMatrix(firstImage);
+
+        loadImage(this.currentImage);
+        this.data = initData(this.currentImage);
+
         startTime = System.nanoTime();
 
         _submitButton.setOnClickListener(submitButtonHandler);
@@ -147,6 +150,11 @@ public class CursorSelectActivity extends AppCompatActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         findViewById(R.id.two_d_submit).setOnTouchListener(mDelayHideTouchListener);
+    }
+
+    private Data initData(DotMatrix dotMatrix) {
+        Data data = new Data("cursor", dotMatrix);
+        return data;
     }
 
     @Override
@@ -210,31 +218,14 @@ public class CursorSelectActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
-
-    private Coordinates<Integer> getCoordinatesFromFilename(String filename) {
-        int x = Integer.parseInt(filename.substring(5, 7));
-        int y = Integer.parseInt(filename.substring(7, 9));
-        return new Coordinates<>(x, y);
-    }
-
-    private final float PIXELS_PER_DP = 3;
-    private final float MARGIN = 5 * PIXELS_PER_DP;
-    private final float CIRCLE_WIDTH = 10 * PIXELS_PER_DP;
-    private final float SPACING = 10 * PIXELS_PER_DP;
-    private Coordinates<Float> getViewDotCoordinates(Coordinates<Integer> dotCoordinates) {
-        float x = MARGIN + (dotCoordinates.getX() - 1) * (CIRCLE_WIDTH + SPACING) + CIRCLE_WIDTH / 2;
-        float y = MARGIN + (dotCoordinates.getY() - 1) * (CIRCLE_WIDTH + SPACING) + CIRCLE_WIDTH / 2;
-        return new Coordinates<>(x, y);
-    }
-
     private double distance(Coordinates<Float> coordinateOne, Coordinates<Float> coordinateTwo) {
         double xdiff = coordinateOne.getX() - coordinateTwo.getX();
         double ydiff = coordinateOne.getY() - coordinateTwo.getY();
         return Math.sqrt(Math.pow(xdiff, 2) + Math.pow(ydiff, 2));
     }
 
-    private void loadNextImage(String nextImage) {
-        int id = getResources().getIdentifier(nextImage, "drawable", getPackageName());
+    private void loadImage(DotMatrix dotMatrix) {
+        int id = getResources().getIdentifier(dotMatrix.getName(), "drawable", getPackageName());
         _matrixView.setImageResource(id);
 
     }
@@ -248,21 +239,23 @@ public class CursorSelectActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             endTime = System.nanoTime();
-            Data.processTimeTaken(startTime, endTime);
+            data.setTimeTaken(startTime, endTime);
 
-            Coordinates<Float> viewDotCoords = getViewDotCoordinates(dotPosition);
+            Coordinates<Float> viewDotCoords = currentImage.getViewCoordinates();
             Coordinates<Float> mouseCoords = getCursorTopLeft();
 
-            float dx = Math.abs(viewDotCoords.getX() - mouseCoords.getX());
-            float dy = Math.abs(viewDotCoords.getY() - mouseCoords.getY());
-
             double pixelDistance = distance(viewDotCoords, mouseCoords);
-            double pixelDistanceFromCircle = pixelDistance < CIRCLE_WIDTH ?
+            double pixelDistanceFromCircle = pixelDistance < currentImage.getCircleWidth() ?
                     0 :
-                    pixelDistance - CIRCLE_WIDTH/2;
-            double normalizedDistanceFromCircle = pixelDistanceFromCircle/CIRCLE_WIDTH;
+                    pixelDistance - (float)currentImage.getCircleWidth()/2;
+            double normalizedDistanceFromCircle = pixelDistanceFromCircle/currentImage.getCircleWidth();
 
-            Data.processPixelDistance(pixelDistanceFromCircle);
+            data.setPixelDistance(pixelDistance);
+
+            /* Send data to database */
+            data.post();
+
+            /* Log normalized distance */
             Data.processCircleDistance(normalizedDistanceFromCircle);
 
             imageCounter++;
@@ -271,8 +264,11 @@ public class CursorSelectActivity extends AppCompatActivity {
                 return;
             }
             String nextImage = images[imageCounter];
-            dotPosition = getCoordinatesFromFilename(nextImage);
-            loadNextImage(nextImage);
+            currentImage = new DotMatrix(nextImage);
+
+            loadImage(currentImage);
+
+            data = initData(currentImage);
             startTime = System.nanoTime();
         }
     };
