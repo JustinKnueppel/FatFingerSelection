@@ -8,7 +8,7 @@ const connection = mysql.createConnection({
 });
 
 const app = express();
-const port = 3000;
+const port = 15544;
 
 app.use(express.json())
 
@@ -33,4 +33,4 @@ app.get('/', (req, res) => {
     connection.end();
 });
 
-app.listen(port, () => console.log(`Example app listening on port ${port}`));
+app.listen(port, '0.0.0.0');
