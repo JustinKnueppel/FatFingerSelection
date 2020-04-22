@@ -37,6 +37,10 @@ public class DotMatrix {
         return name;
     }
 
+    public String getType() {
+        return type.toString().toLowerCase();
+    }
+
     public Coordinates<Integer> getTarget() {
         return target;
     }

@@ -13,6 +13,7 @@ public class Data {
     private final int port = 15544;
 
     private String selection_type;
+    private String matrix_style;
     private long duration;
     private double distance_from_center;
     private float circle_radius;
@@ -20,6 +21,7 @@ public class Data {
 
     public Data(String selection_type, DotMatrix dotMatrix) {
         this.selection_type = selection_type;
+        this.matrix_style = dotMatrix.getType();
         this.circle_radius = (float)dotMatrix.getCircleWidth() / 2;
         this.space_between = dotMatrix.getSpaceBetween();
     }
@@ -60,6 +62,7 @@ public class Data {
 
                     JSONObject jsonParam = new JSONObject();
                     jsonParam.put("selection_type", selection_type);
+                    jsonParam.put("matrix_style", matrix_style);
                     jsonParam.put("duration", duration);
                     jsonParam.put("distance_from_center", distance_from_center);
                     jsonParam.put("circle_radius", circle_radius);
