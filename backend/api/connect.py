@@ -15,6 +15,7 @@ class Database:
         query = ("create table if not exists TRIAL ("
                  "id int auto_increment primary key,"
                  "selection_type varchar(50),"
+                 "matrix_style varchar(50),"
                  "duration bigint,"
                  "distance_from_center double,"
                  "circle_radius float,"
@@ -39,13 +40,13 @@ class Database:
         return data
 
     def add_row(self, data):
-        insert_query = """ insert into TRIAL (selection_type, duration, distance_from_center, circle_radius, space_between)
-                            values (%s, %s, %s, %s, %s)"""
+        insert_query = """ insert into TRIAL (selection_type, matrix_style, duration, distance_from_center, circle_radius, space_between)
+                            values (%s, %s, %s, %s, %s, %s)"""
 
         cnx = mysql.connector.connect(**self.config)
         cursor = cnx.cursor()
 
-        record_tuple = (data['selection_type'], data['duration'], data['distance_from_center'], data['circle_radius'], data['space_between'])
+        record_tuple = (data['selection_type'], data['matrix_style'], data['duration'], data['distance_from_center'], data['circle_radius'], data['space_between'])
 
         cursor.execute(insert_query, record_tuple)
         cnx.commit()
