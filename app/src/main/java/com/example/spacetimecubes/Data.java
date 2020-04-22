@@ -50,7 +50,7 @@ public class Data {
             @Override
             public void run() {
                 try {
-                    URL url = new URL("https", urlAddress, port, "");
+                    URL url = new URL("http", urlAddress, port, "");
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("POST");
                     conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
