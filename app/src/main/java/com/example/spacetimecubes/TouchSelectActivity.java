@@ -27,6 +27,7 @@ public class TouchSelectActivity extends AppCompatActivity {
     private Coordinates<Integer> dotPosition;
     private long startTime;
     private long endTime;
+    private Data data;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -96,17 +97,27 @@ public class TouchSelectActivity extends AppCompatActivity {
             Collections.shuffle(imageList);
             imageList.toArray(images);
         }
-        imageCounter = 0;
+        this.imageCounter = 0;
 
         String firstImage = images[0];
-        dotPosition = getCoordinatesFromFilename(firstImage);
+        this.dotPosition = getCoordinatesFromFilename(firstImage);
         loadImage(firstImage);
-        startTime = System.nanoTime();
 
-        _dotMatrix.setOnTouchListener(dotMatrixOnTouchListener);
+        this.data = initData(firstImage);
+
+        this.startTime = System.nanoTime();
+
+        this._dotMatrix.setOnTouchListener(dotMatrixOnTouchListener);
 
         mVisible = true;
 
+    }
+
+    private Data initData(String imageName) {
+        float circleRadius = 10*PIXELS_PER_DP;
+        float spaceBetween = 10*PIXELS_PER_DP;
+        Data data = new Data("touch", circleRadius, spaceBetween);
+        return data;
     }
 
     @Override
@@ -187,7 +198,7 @@ public class TouchSelectActivity extends AppCompatActivity {
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 endTime = System.nanoTime();
-                Data.processTimeTaken(startTime, endTime);
+                data.setTimeTaken(startTime, endTime);
 
                 float touchX = event.getX();
                 float touchY = event.getY();
@@ -201,7 +212,12 @@ public class TouchSelectActivity extends AppCompatActivity {
                         pixelDistance - CIRCLE_WIDTH / 2;
                 double normalizedDistanceFromCircle = pixelDistanceFromCircle / CIRCLE_WIDTH;
 
-                Data.processPixelDistance(pixelDistanceFromCircle);
+                data.setPixelDistance(pixelDistance);
+
+                /* Send data to database */
+                data.post();
+
+                /* Log normalized distance */
                 Data.processCircleDistance(normalizedDistanceFromCircle);
 
                 imageCounter++;
@@ -212,6 +228,9 @@ public class TouchSelectActivity extends AppCompatActivity {
                 String nextImage = images[imageCounter];
                 dotPosition = getCoordinatesFromFilename(nextImage);
                 loadImage(nextImage);
+
+                data = initData(nextImage);
+
                 startTime = System.nanoTime();
 
                 return true;
