@@ -1,16 +1,19 @@
 package com.example.spacetimecubes;
 
+import android.content.Context;
+import android.util.DisplayMetrics;
+
 public class DotMatrix {
     private enum MatrixType {SPREAD, BIG, DENSE};
 
-    private static final int PIXELS_PER_DP = 3;
+    private static final float PIXELS_PER_DP = getPixelsPerDp(SpaceTimeCubes.getAppContext());
 
     private String name;
     private MatrixType type;
     private Coordinates<Integer> target;
-    private int margin;
-    private int circleWidth;
-    private int spaceBetween;
+    private float margin;
+    private float circleWidth;
+    private float spaceBetween;
 
     public DotMatrix(String name) {
         this.name = name;
@@ -22,8 +25,8 @@ public class DotMatrix {
     }
 
     public Coordinates<Float> getViewCoordinates() {
-        float x = this.margin + (this.target.getX() - 1) * (this.circleWidth + this.spaceBetween) + (float)this.circleWidth / 2;
-        float y = this.margin + (this.target.getY() - 1) * (this.circleWidth + this.spaceBetween) + (float)this.circleWidth / 2;
+        float x = this.margin + (this.target.getX() - 1) * (this.circleWidth + this.spaceBetween) + this.circleWidth / 2;
+        float y = this.margin + (this.target.getY() - 1) * (this.circleWidth + this.spaceBetween) + this.circleWidth / 2;
 
 
         /* Scale for pixel density */
@@ -41,19 +44,11 @@ public class DotMatrix {
         return type.toString().toLowerCase();
     }
 
-    public Coordinates<Integer> getTarget() {
-        return target;
-    }
-
-    public int getMargin() {
-        return margin * PIXELS_PER_DP;
-    }
-
-    public int getCircleWidth() {
+    public float getCircleWidth() {
         return circleWidth * PIXELS_PER_DP;
     }
 
-    public int getSpaceBetween() {
+    public float getSpaceBetween() {
         return spaceBetween * PIXELS_PER_DP;
     }
 
@@ -65,6 +60,10 @@ public class DotMatrix {
         } else {
             return MatrixType.DENSE;
         }
+    }
+
+    private static float getPixelsPerDp(Context context){
+        return (float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT;
     }
 
     private static Coordinates<Integer> getTargetCoordinates(String name) {
